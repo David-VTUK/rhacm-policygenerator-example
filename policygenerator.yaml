@@ -1,0 +1,36 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: network-isolation-generator
+policyDefaults:
+  namespace: open-cluster-management-policies
+  remediationAction: inform
+  severity: low
+policies:
+  - name: dev-network-configuration
+    consolidateManifests: false
+    manifests:
+      - path: overlays/dev
+        namespaceSelector:
+          include: ["*"]
+          exclude: ["kube-*", "openshift-*"]
+    placement:
+      placementPath: placements/dev-placement.yaml
+  - name: stg-network-configuration
+    consolidateManifests: false
+    manifests:
+      - path: overlays/stg
+        namespaceSelector:
+          include: ["*"]
+          exclude: ["kube-*", "openshift-*"]
+    placement:
+      placementPath: placements/stg-placement.yaml
+  - name: prod-network-configuration
+    consolidateManifests: false
+    manifests:
+      - path: overlays/prod
+        namespaceSelector:
+          include: ["*"]
+          exclude: ["kube-*", "openshift-*"]
+    placement:
+      placementPath: placements/prod-placement.yaml

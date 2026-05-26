@@ -1,0 +1,411 @@
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+    annotations:
+        policy.open-cluster-management.io/categories: CM Configuration Management
+        policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+        policy.open-cluster-management.io/description: ""
+        policy.open-cluster-management.io/standards: NIST SP 800-53
+    name: dev-network-configuration
+    namespace: open-cluster-management-policies
+spec:
+    disabled: false
+    policy-templates:
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: dev-network-configuration
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: networking.k8s.io/v1
+                        kind: NetworkPolicy
+                        metadata:
+                            annotations:
+                                demo.environment: dev
+                            name: example-allow-all-netpolicy
+                        spec:
+                            egress:
+                                - {}
+                            ingress:
+                                - {}
+                            podSelector: {}
+                            policyTypes:
+                                - Ingress
+                                - Egress
+                remediationAction: inform
+                severity: low
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: dev-network-configuration2
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: k8s.ovn.org/v1
+                        kind: EgressFirewall
+                        metadata:
+                            annotations:
+                                demo.environment: dev
+                            name: default
+                            namespace: default
+                        spec:
+                            egress:
+                                - to:
+                                    cidrSelector: 0.0.0.0/0
+                                  type: Allow
+                                - to:
+                                    cidrSelector: ::/0
+                                  type: Allow
+                remediationAction: inform
+                severity: low
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: dev-network-configuration3
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: policy.networking.k8s.io/v1alpha1
+                        kind: AdminNetworkPolicy
+                        metadata:
+                            annotations:
+                                demo.environment: dev
+                            name: allow-all-adminpolicy
+                        spec:
+                            egress:
+                                - action: Allow
+                                  to:
+                                    - namespaces: {}
+                            ingress:
+                                - action: Allow
+                                  from:
+                                    - namespaces: {}
+                            priority: 10
+                            subject:
+                                namespaces: {}
+                remediationAction: inform
+                severity: low
+    remediationAction: inform
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+    annotations:
+        policy.open-cluster-management.io/categories: CM Configuration Management
+        policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+        policy.open-cluster-management.io/description: ""
+        policy.open-cluster-management.io/standards: NIST SP 800-53
+    name: stg-network-configuration
+    namespace: open-cluster-management-policies
+spec:
+    disabled: false
+    policy-templates:
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: stg-network-configuration
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: networking.k8s.io/v1
+                        kind: NetworkPolicy
+                        metadata:
+                            annotations:
+                                demo.environment: stg
+                            name: example-allow-all-netpolicy
+                        spec:
+                            egress:
+                                - {}
+                            ingress:
+                                - {}
+                            podSelector: {}
+                            policyTypes:
+                                - Ingress
+                                - Egress
+                remediationAction: inform
+                severity: low
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: stg-network-configuration2
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: k8s.ovn.org/v1
+                        kind: EgressFirewall
+                        metadata:
+                            annotations:
+                                demo.environment: stg
+                            name: default
+                            namespace: default
+                        spec:
+                            egress:
+                                - to:
+                                    cidrSelector: 0.0.0.0/0
+                                  type: Allow
+                                - to:
+                                    cidrSelector: ::/0
+                                  type: Allow
+                remediationAction: inform
+                severity: low
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: stg-network-configuration3
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: policy.networking.k8s.io/v1alpha1
+                        kind: AdminNetworkPolicy
+                        metadata:
+                            annotations:
+                                demo.environment: stg
+                            name: allow-all-adminpolicy
+                        spec:
+                            egress:
+                                - action: Allow
+                                  to:
+                                    - namespaces: {}
+                            ingress:
+                                - action: Allow
+                                  from:
+                                    - namespaces: {}
+                            priority: 10
+                            subject:
+                                namespaces: {}
+                remediationAction: inform
+                severity: low
+    remediationAction: inform
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+    annotations:
+        policy.open-cluster-management.io/categories: CM Configuration Management
+        policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+        policy.open-cluster-management.io/description: ""
+        policy.open-cluster-management.io/standards: NIST SP 800-53
+    name: prod-network-configuration
+    namespace: open-cluster-management-policies
+spec:
+    disabled: false
+    policy-templates:
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: prod-network-configuration
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: networking.k8s.io/v1
+                        kind: NetworkPolicy
+                        metadata:
+                            annotations:
+                                demo.environment: prod
+                            name: example-allow-all-netpolicy
+                        spec:
+                            egress:
+                                - {}
+                            ingress:
+                                - {}
+                            podSelector: {}
+                            policyTypes:
+                                - Ingress
+                                - Egress
+                remediationAction: inform
+                severity: low
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: prod-network-configuration2
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: k8s.ovn.org/v1
+                        kind: EgressFirewall
+                        metadata:
+                            annotations:
+                                demo.environment: prod
+                            name: default
+                            namespace: default
+                        spec:
+                            egress:
+                                - to:
+                                    cidrSelector: 0.0.0.0/0
+                                  type: Allow
+                                - to:
+                                    cidrSelector: ::/0
+                                  type: Allow
+                remediationAction: inform
+                severity: low
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+                name: prod-network-configuration3
+            spec:
+                namespaceSelector:
+                    exclude:
+                        - kube-*
+                        - openshift-*
+                    include:
+                        - '*'
+                object-templates:
+                    - complianceType: musthave
+                      objectDefinition:
+                        apiVersion: policy.networking.k8s.io/v1alpha1
+                        kind: AdminNetworkPolicy
+                        metadata:
+                            annotations:
+                                demo.environment: prod
+                            name: allow-all-adminpolicy
+                        spec:
+                            egress:
+                                - action: Allow
+                                  to:
+                                    - namespaces: {}
+                            ingress:
+                                - action: Allow
+                                  from:
+                                    - namespaces: {}
+                            priority: 10
+                            subject:
+                                namespaces: {}
+                remediationAction: inform
+                severity: low
+    remediationAction: inform
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+    name: dev-placement
+    namespace: open-cluster-management-policies
+spec:
+    clusterSets:
+        - dev-clusters
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+    name: stg-placement
+    namespace: open-cluster-management-policies
+spec:
+    clusterSets:
+        - stg-clusters
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+    name: prod-placement
+    namespace: open-cluster-management-policies
+spec:
+    clusterSets:
+        - prod-clusters
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+    name: binding-dev-network-configuration
+    namespace: open-cluster-management-policies
+placementRef:
+    apiGroup: cluster.open-cluster-management.io
+    kind: Placement
+    name: dev-placement
+subjects:
+    - apiGroup: policy.open-cluster-management.io
+      kind: Policy
+      name: dev-network-configuration
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+    name: binding-prod-network-configuration
+    namespace: open-cluster-management-policies
+placementRef:
+    apiGroup: cluster.open-cluster-management.io
+    kind: Placement
+    name: prod-placement
+subjects:
+    - apiGroup: policy.open-cluster-management.io
+      kind: Policy
+      name: prod-network-configuration
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+    name: binding-stg-network-configuration
+    namespace: open-cluster-management-policies
+placementRef:
+    apiGroup: cluster.open-cluster-management.io
+    kind: Placement
+    name: stg-placement
+subjects:
+    - apiGroup: policy.open-cluster-management.io
+      kind: Policy
+      name: stg-network-configuration
