@@ -16,15 +16,6 @@ policies:
           exclude: ["kube-*", "openshift-*"]
     placement:
       placementPath: placements/dev-placement.yaml
-  - name: stg-network-configuration
-    consolidateManifests: false
-    manifests:
-      - path: overlays/stg
-        namespaceSelector:
-          include: ["*"]
-          exclude: ["kube-*", "openshift-*"]
-    placement:
-      placementPath: placements/stg-placement.yaml
   - name: prod-network-configuration
     consolidateManifests: false
     manifests:
